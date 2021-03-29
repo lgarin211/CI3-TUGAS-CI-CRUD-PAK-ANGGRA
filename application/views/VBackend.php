@@ -18,6 +18,8 @@
             </tr>
         </table>
 
-        
+<div class="text-center">
+        <a  href="https://github.com/lgarin211/TUGASCICRUD_PAK_ANGGRA"> &#169;Agustinus</a>
+        </div>
     </body>
 </html> 
