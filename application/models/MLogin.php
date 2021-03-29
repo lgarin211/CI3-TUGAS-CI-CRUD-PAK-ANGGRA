@@ -12,7 +12,7 @@
 			$query = $this->db->get();
 			if($query -> num_rows() == 1){
 				$row = $query->row(); 
-    			return $row->nip;
+    			return $row->nis;
 			}else{
 				return false;
 			}

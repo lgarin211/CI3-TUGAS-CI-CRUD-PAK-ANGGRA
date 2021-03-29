@@ -1,176 +1,12 @@
 ========== L O G I N ==================
 Controller=============================
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-
-class Login extends CI_Controller {
-	function __construct(){
-	parent::__construct();
-	$this->load->model('MLogin');
-	}
-
-	public function index()
-	{
-		if (isset($_POST['btn_login'])){
-				$username = $_POST['txt_user'];
-				$password = $_POST['txt_pass'];
-				$notif = $this->MLogin->GoLogin($username,$password);
-				if($notif){
-					$this->load->library('session');
-					$this->session->set_userdata('Login','OnLogin');
-					redirect(site_url('Welcome'));
-				}			
-				else{
-					$this->load->library('session');
-					$this->session->unset_userdata('Login');
-					redirect(site_url('Login'));
-				}
-			}
-
-		$this->load->view('VLogin');
-	}
-
-}
 View ===================================
-<html>
-	<head>
-		<title>Login System</title>
-	</head>
-	<body>
-		<form action="" method="post">
-		<table align="center">
-			<tr>
-				<td>Username</td>
-				<td><input type="text" name="txt_user"></td>
-			</tr>
-			<tr>
-				<td>Password</td>
-				<td><input type="Password" name="txt_pass"></td>
-			</tr>
-			<tr>
-				<td colspan="2">
-					<input type="submit" name="btn_login" value="Login">
-				</td>
-			</tr>
-		</table>
-		</form>
-	</body>
-</html>
 ---------------------------------------------------------------------------------------------
 ========== B A C K E N D ===============
 Controller==============================
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Welcome extends CI_Controller {
-	function __construct(){
-	parent::__construct();
-	$this->load->model('MSudi');
-	}
-
-	public function index()
-	{
-		if($this->session->userdata('Login'))
-		{
-			$data['content']='VBlank';
-			$this->load->view('VBackend',$data);
-		}
-		else
-		{
-			 redirect(site_url('Login'));
-		}
-
-	}
-
-	public function DataSiswa()
-	{
-
-		
-
-		if($this->uri->segment(4)=='view')
-		{
-			$nis=$this->uri->segment(3);
-			$tampil=$this->MSudi->GetDataWhere('tbl_siswa','nis',$nis)->row();
-			$data['detail']['nis']= $tampil->nis;
-            		$data['detail']['nama']= $tampil->nama;
-            		$data['detail']['no_tlp']= $tampil->no_tlp;
-			$data['content']='VFormUpdateSiswa';
-		}
-		else
-		{	
-			$data['DataSiswa']=$this->MSudi->GetData('tbl_siswa');
-			$data['content']='VSiswa';
-		}
-
-
-		$this->load->view('VBackend',$data);
-	}
-
-
-	public function VFormAddSiswa()
-	{
-		$data['content']='VFormAddSiswa';
-		$this->load->view('VBackend',$data);
-	}
-	public function AddDataSiswa()
-	{
-		 $add['nis']=$this->input->post('txt_nis');
-         	 $add['nama']= $this->input->post('txt_nama');
-         	 $add['no_tlp']= $this->input->post('txt_no_tlp');  
-        	 $this->MSudi->AddData('tbl_siswa',$add);
-        	 redirect(site_url('Welcome/DataSiswa'));
-	}
-
-
-
-	public function UpdateDataSiswa()
-	{
-		 $nis=$this->input->post('txt_nis');
-		 $update['nama']= $this->input->post('txt_nama');
-         	 $update['no_tlp']= $this->input->post('txt_no_tlp');
-          	 $this->MSudi->UpdateData('tbl_siswa','nis',$nis,$update);
-		 redirect(site_url('Welcome/DataSiswa'));
-	}
-
-
-	public function DeleteDataSiswa()
-	{
-		 $nis=$this->uri->segment('3');
-        	 $this->MSudi->DeleteData('tbl_siswa','nis',$nis);
-        	 redirect(site_url('Welcome/DataSiswa'));
-	}
-
-
-	
-	public function Logout()
-	{
-		$this->load->library('session');
-		$this->session->unset_userdata('Login');
-		redirect(site_url('Login'));
-	}
-
-}
 View ================= Menu Utama ===================
-<html>
-	<head>
-		<title>Backend System</title>
-	</head>
-	<body>
-		<table width="800px" height="600px" border="1px" align="center">
-			<tr height="100px">
-				<td>
-					<a href="<?php echo site_url('Welcome/DataSiswa'); ?>">Data Siswa</a>
-					<a href="<?php echo site_url('Welcome/Logout'); ?>">Logout</a>
-				</td>
-			</tr>
-			<tr height="500px">
-				<td>
-					<?php $this->load->view($content); ?>
-				</td>
-			</tr>
-		</table>
-	</body>
-</html>
+
 
 View ================ Data Grid ================
 <table border="1px">
@@ -211,12 +47,10 @@ View ================ Data Grid ================
 
 View ================= Form Add ==========================
 <form action="<?php echo site_url('Welcome/AddData'); ?>" method="post">
-	Kode Login<input type="text" name="kd_login"><br>
 	NIP<input type="text" name="nip"><br>
 	Username<input type="text" name="username"><br>
 	Password<input type="text" name="password"><br>
 	Status<input type="text" name="status"><br>
-	<input type="submit" name="simpan" value="Simpan">
 </form>
 
 
